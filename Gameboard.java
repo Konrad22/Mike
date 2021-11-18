@@ -4,74 +4,7 @@ static int WHITE = 0;
 static int BLACK = 1;
 static int BACKGROUND = 2;
 
-public class BoardMarker
-{
-	int x, y, r, u; //u...in use?
-	static int FREE = 0;
-	static int BLOCKED = 1;
-	
-	BoardMarker(int newX, int newY, int newR)
-	{
-		x = newX;
-		y = newY;
-		r = newR;
-		u = FREE;
-	}
-	
-	void draw()
-	{
-		g.drawOval(x - r, y - r, 2*r, 2*r);		//is that possible? g would be the frame, I think?
-	}
-	
-	void occupy()
-	{
-		this.u = BLOCKED;
-	}
-	
-	void leave()
-	{
-		this.u = FREE;
-	}
-}
-
-
-public class Stone
-{
-	int x, y, r, i;
-	static int NOTINGAME = 0;
-	static int INGAME = 1;
-	Stone(int NewX, int newY, int newR)
-	{
-		x = newX;
-		y = newY;
-		r = newR;
-		i = NOTINGAME;
-	}
-
-	void draw()
-	{
-		g.drawOval(x - r, y - r, 2*r, 2*r);		//is that possible? g would be the frame, I think?
-	}
-	
-	void erase()
-	{
-		this.erase()		//gotta implement it *somehow*
-		//
-	}
-	
-	void moveTo(int newX, int newY)
-	{
-		this.erase();
-		x = newX;
-		y = newy;
-		this.draw();
-	}
-	
-	
-}
-
-
-public class gameboard
+public class Gameboard
 {
 	static void DrawGameboard(int x, int y, int z, int d1, int e1) //s == 6*z, z has to be divisible by 6
 	{
@@ -107,17 +40,11 @@ public class gameboard
 	static void MoveStone(stone s, int x, int y)	//class stone + methods erase, move, draw, x, y do not even exist yet...
 													//x, y are the new coordinates
 	{
-		a = stone.x - x
-		b = stone.y - y
+		a = stone.x
+		b = stone.y
 		s.erase()
-		s.move(a, b) //stone.x =+ a, stone.y =+ b
+		//draw intersection (at a, b)
+		s.move(x, y) //stone.x = x, stone.y = y
 		s.draw()
-	}
-	public static void main(String args[])
-	{
-		//has to run until game is over
-		//while true? maybe?
-		//do I have to end it, or can I just make a pop up that says 'side x lost' and make any moves on the board unviable by 
-		//emptying the list that contains the unoccupied places?
 	}
 }
