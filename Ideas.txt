@@ -20,3 +20,5 @@ any problem if I use lists instead (which don't need special implementation unli
 okay, lists are just as bad, so lets stick to sets
 
 phase 3 is special as in not both players have to be in phase 3, one is likely still in phase 2 at the time
+
+does that even work in java? how? I'm too stuck in python with my thinking
