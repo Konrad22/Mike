@@ -1,7 +1,7 @@
 public class Gamepiece
 {
 	int x, y, r, c;				//c....color
-	Stone(int newX, int newY, int newR)  //r...radian
+	Gamepiece(int newX, int newY, int newR)  //r...radian
 	{
 		x = newX;
 		y = newY;
