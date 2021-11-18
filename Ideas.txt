@@ -15,3 +15,8 @@ probably 3 dictionaries, so I don't have to maintain it all the time?
 phase 1 and phase 3 only need one entry (a set) each
 keep that set around and update it? viable move for phase 2 = intersection between list of unoccupied places and reachable places for the specific spot
 in that case, no need for attribute 'occupied' in the intersection of lines?
+
+any problem if I use lists instead (which don't need special implementation unlike sets)
+okay, lists are just as bad, so lets stick to sets
+
+phase 3 is special as in not both players have to be in phase 3, one is likely still in phase 2 at the time
