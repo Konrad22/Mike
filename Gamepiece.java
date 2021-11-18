@@ -19,10 +19,15 @@ public class Gamepiece
 		c = newC;		//needs to be implemented somewhere
 		f.this.draw()
 	}
+	
+	void draw()
+	{
+		this.fillOval(x - r, y - r, 2*r, 2*r, BackgroundColor);		//is that possible? g would be the frame, I think?
+	}
 
 	void draw(int newC)
 	{
-		g.fillOval(x - r, y - r, 2*r, 2*r, newC);		//is that possible? g would be the frame, I think?
+		this.fillOval(x - r, y - r, 2*r, 2*r, newC);		//is that possible? g would be the frame, I think?
 	}
 	
 	void erase(Gamepiece g)
