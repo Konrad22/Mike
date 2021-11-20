@@ -1,14 +1,14 @@
 public class Gamepiece
 {
 	int x, y, r;	
-	Color c;					//c....color
+	Color c;
 	Gamepiece(int newX, int newY, int newR, Frame f)  //r...radian
 	{
 		x = newX;
 		y = newY;
 		r = newR;
-		c = BackgroundColor;		//needs to be implemented somewhere
-		f.this.draw()
+		c = Color.Background;                     //...this doesn't seem to make any sense
+		f.this.draw();
 	}
 	
 	Gamepiece(int newX, int newY, int newR, Color newC, Frame f)  //r...radian
@@ -16,7 +16,7 @@ public class Gamepiece
 		x = newX;
 		y = newY;
 		r = newR;
-		c = newC;		//needs to be implemented somewhere
+		c = COLOR.newC;                                                 
 		f.this.draw()
 	}
 	
