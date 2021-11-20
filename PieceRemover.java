@@ -1,16 +1,18 @@
 public class PieceRemover
 {
-	int i = 0;
-	int j = 7;
+	int counter = 0;
   void takePiece(Gamepiece g)
 	{
-		g.erase;
-		if turn.black
-			taken[i].draw(BLACK);
-			i = i + 1;
+		g.erase();
+		if Turncounter.black
+		{
+			taken[counter].draw(BLACK);
+		}
 		else
-			taken[j].draw(WHITE);
-			j = j + 1;
+		{
+			taken[counter + 7].draw(WHITE);
+		}
+		counter = counter + 1;
 	}
 }
 
