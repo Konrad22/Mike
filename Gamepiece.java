@@ -22,12 +22,12 @@ public class Gamepiece
 	
 	void draw()
 	{
-		this.fillOval(x - r, y - r, 2*r, 2*r, BackgroundColor);		//is that possible? g would be the frame, I think?
+		this.fillOval(x - r, y - r, 2*r, 2*r, BACKGROUND);		//is that possible? g would be the frame, I think?
 	}
 
-	void draw(int newC)
+	void draw(Color c)
 	{
-		this.fillOval(x - r, y - r, 2*r, 2*r, newC);		//is that possible? g would be the frame, I think?
+		this.fillOval(x - r, y - r, 2*r, 2*r, c);		//is that possible? g would be the frame, I think?
 	}
 	
 	void erase(Gamepiece g)
@@ -35,14 +35,13 @@ public class Gamepiece
 		g.c = BackgroundColor;		//gotta implement it *somehow*
 	}
 	
-	void moveTo(int newX, int newY)
+	void moveTo(Gamepiece g)
 	{
+		Colour color = this.color;
 		this.erase();
-		this.x = newX;
-		this.y = newy;
-		this.draw();
+		g.draw(color);
 	}
-	public Color c()
+	public Color color()
 	{
 		return c;
 	}
