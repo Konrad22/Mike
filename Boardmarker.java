@@ -1,8 +1,7 @@
 public class BoardMarker
 {
-	int x, y, r; //u...in use?
-	static int FREE = 0;
-	static int BLOCKED = 1;
+	int x, y, r;
+	private boolean FREE = true;
 	
 	BoardMarker(int newX, int newY, int newR)
 	{
@@ -13,16 +12,17 @@ public class BoardMarker
 	
 	void draw()
 	{
-		g.drawOval(x - r, y - r, 2*r, 2*r);		//is that possible? g would be the frame, I think?
+		g.drawOval(x - r, y - r, 2*r, 2*r, ColorState.BLACK);		//is that possible? g would be the frame, I think?
 	}
 	
 	void occupy()
 	{
-		this.u = BLOCKED;
+		FREE = false;
 	}
 	
 	void leave()
 	{
-		this.u = FREE;
+		FREE = true;
+		this.draw()
 	}
 }
