@@ -1,15 +1,17 @@
 public class Gamepiece
 {
+	private ArrayList<Gamepiece> listOfPiecesInReach = new ArrayList<>();
 	int x, y, r;	
 	Color c;
 	Player p;
-	Gamepiece(int newX, int newY, int newR, Player newP)  //r...radian
+	Gamepiece(int newX, int newY, int newR, Player newP, ArrayList<Gamepiece> newList)  //r...radian
 	{
 		x = newX;
 		y = newY;
 		r = newR;
 		c = Backgroundcolor;                     //need to replace this once I pick the color
 		p = newP;
+		listOfPiecesInReach = newList;
 		f.this.draw();
 	}
 	
@@ -20,6 +22,7 @@ public class Gamepiece
 		r = newR;
 		c = newC;                     //need to replace this once I pick the color
 		p = newP;
+		listOfPiecesInReach = Collections.<Gamepiece>emptyList();
 		f.this.draw();
 	}
 	
