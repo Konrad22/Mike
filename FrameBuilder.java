@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class CreateFrame
+public class FrameBuilder
 {
   
   static Frame myFrame;
