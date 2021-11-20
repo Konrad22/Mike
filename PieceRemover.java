@@ -1,7 +1,7 @@
-public class PieceRemover
+/* public class PieceRemover
 {
 	int counter = 0;
-  void takePiece(Gamepiece g)
+  void takePiece(GamePiece g)
 	{
 		g.erase();
 		if Turncounter.black
@@ -19,7 +19,7 @@ public class PieceRemover
 }
 
 
-Gamepiece taken [] = new Gamepiece[13] //0-6 taken by black, 7-13 taken by white
+GamePiece taken [] = new GamePiece[13] //0-6 taken by black, 7-13 taken by white
 taken[0] = b1;
 .
 .
@@ -84,3 +84,4 @@ not_occupied[0] = w1;
 .
 .
 .
+*/

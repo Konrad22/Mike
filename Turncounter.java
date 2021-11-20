@@ -1,4 +1,4 @@
-public class Turncounter
+/* public class Turncounter
 {
 	private boolean isTurnBlack = false;		//I probably still need a constructor for this to call the method, right?
 	
@@ -30,3 +30,4 @@ public class Turncounter
 		}
 	}
 }
+*/

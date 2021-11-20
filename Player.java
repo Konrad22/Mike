@@ -1,13 +1,16 @@
+import java.awt.*;
+import java.util.List;
+
 public class Player
 {
-	Color c;
-	ArrayList<Gamepiece> listOfPieces = new ArrayList<>();
+	Color color;
+	List<GamePiece> listOfPieces;
 	Stage stage;
 	
-	Player(Color newC)
+	Player(Color color)
 	{
-		c = ColorState.newC;
-		stage = STAGE1;
+		this.color = color;
+		stage = Stage.STAGE1;
 	}
 
 	private enum Stage
@@ -15,9 +18,9 @@ public class Player
 		STAGE1, STAGE2, STAGE3;
 	}
 	
-	public void changePhase(Stage newStage)
+	public void changePhase(Stage stage)
 	{
-		this.stage = newStage
+		this.stage = stage;
 	}
 	
 	public Stage checkStage()
@@ -30,13 +33,13 @@ public class Player
 		return this.listOfPieces.size();
 	}
 	
-	public void updateListOfPieces(Gamepiece g1, Gamepiece g2)
+	public void updateListOfPieces(GamePiece g1, GamePiece g2)
 	{
 		listOfPieces.remove(g1);
 		listOfPieces.add(g2);
 	}
 	
-	public void removePieceFromList(Gamepiece g)
+	public void removePieceFromList(GamePiece g)
 	{
 		listOfPieces.remove(g);
 	}
