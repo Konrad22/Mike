@@ -1,9 +1,5 @@
 import java.awt.*; //frankly I have no idea when to use static/private/public, so this stuff probably doesn't make sense
 
-static int WHITE = 0;
-static int BLACK = 1;
-static int BACKGROUND = 2;
-
 public class Gameboard
 {
 	static void DrawGameboard(int x, int y, int z, int d1, int e1) //s == 6*z, z has to be divisible by 6
