@@ -1,13 +1,13 @@
 public class BoardMarker
 {
-	int x, y, r;
-	private boolean free = true;
+	int x, y, radian;
+	private boolean freeIntelliJ = true;
 	
 	BoardMarker(int newX, int newY, int newR)
 	{
 		x = newX;
 		y = newY;
-		r = newR;
+		radian = newR;
 	}
 	
 	void draw()
