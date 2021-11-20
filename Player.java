@@ -1,7 +1,7 @@
 public class Player
 {
 	Color c;
-	ArrayList<Gamepiece> listOfPieces = new ArrayList<>()
+	ArrayList<Gamepiece> listOfPieces = new ArrayList<>();
 	Stage stage;
 	
 	Player(Color newC)
