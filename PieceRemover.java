@@ -7,12 +7,14 @@ public class PieceRemover
 		if Turncounter.black
 		{
 			taken[counter].draw(BLACK);
+			BlackPlayer.pieces--;
 		}
 		else
 		{
 			taken[counter + 7].draw(WHITE);
+			WhitePlayer.pieces--;
 		}
-		counter = counter + 1;
+		counter++;
 	}
 }
 
