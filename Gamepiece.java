@@ -2,27 +2,31 @@ public class Gamepiece
 {
 	int x, y, r;	
 	Color c;
-	Gamepiece(int newX, int newY, int newR, Frame f)  //r...radian
+	Player p;
+	Gamepiece(int newX, int newY, int newR, Player newP)  //r...radian
 	{
 		x = newX;
 		y = newY;
 		r = newR;
-		c = Color.Background;                     //...this doesn't seem to make any sense
+		c = Backgroundcolor;                     //need to replace this once I pick the color
+		p = newP;
 		f.this.draw();
 	}
 	
-	Gamepiece(int newX, int newY, int newR, Color newC, Frame f)  //r...radian
+	Gamepiece(int newX, int newY, int newR, Color newC, Player newP)  //r...radian
 	{
 		x = newX;
 		y = newY;
 		r = newR;
-		c = COLOR.newC;                                                 
-		f.this.draw()
+		c = newC;                     //need to replace this once I pick the color
+		p = newP;
+		f.this.draw();
 	}
 	
 	void draw()
 	{
-		this.fillOval(x - r, y - r, 2*r, 2*r, BACKGROUND);		//is that possible? g would be the frame, I think?
+		this.fillOval(x - r, y - r, 2*r, 2*r, Backgroundcolor);		//is that possible? g would be the frame, I think?
+										//need to replace it once I pick the color
 	}
 
 	void draw(Color c)
@@ -32,7 +36,7 @@ public class Gamepiece
 	
 	void erase(Gamepiece g)
 	{
-		g.c = BackgroundColor;		//gotta implement it *somehow*
+		g.c = Backgroundcolor;		//need to replace this once I pick the color
 	}
 	
 	void moveTo(Gamepiece g)
@@ -40,6 +44,7 @@ public class Gamepiece
 		Colour color = this.color;
 		this.erase();
 		g.draw(color);
+		p.updateListOfPieces(this, g);
 	}
 	public Color color()
 	{
