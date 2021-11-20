@@ -1,4 +1,4 @@
-public class TakePiece
+public class PieceRemover
 {
 	int i = 0;
 	int j = 7;
