@@ -1,25 +1,33 @@
-/* public class PieceRemover
+import java.awt.*;
+
+public class PieceRemover
 {
 	int counter = 0;
-  void takePiece(GamePiece g)
+	GamePiece taken [] = new GamePiece[13];
+
+
+  void takePiece(Graphics graphics, GamePiece gamePiece, Player player)
 	{
-		g.erase();
-		if Turncounter.black
+		gamePiece.erase(graphics);
+		if(TurnCounter.black())
 		{
-			taken[counter].draw(BLACK);
-			BlackPlayer.pieces--;
+			graphics.setColor(FrameBuilder.BLUE_PLAYER);
+			taken[counter].draw(graphics);
 		}
 		else
 		{
-			taken[counter + 7].draw(WHITE);
-			WhitePlayer.pieces--;
+			graphics.setColor(FrameBuilder.RED_PLAYER);
+			taken[counter + 7].draw(graphics);
 		}
+		player.removePieceFromList(gamePiece);
 		counter++;
 	}
 }
 
 
-GamePiece taken [] = new GamePiece[13] //0-6 taken by black, 7-13 taken by white
+
+/*
+ //0-6 taken by black, 7-13 taken by white
 taken[0] = b1;
 .
 .
@@ -28,7 +36,7 @@ taken[13] = w6;
 
 //somewhere else?
 
-Gamepiece not_occupied [] = new Gamepiece[41];
+GamePiece not_occupied [] = new GamePiece[41];
 Gamepiece w1 = new Gamepiece(); //do this in the Boardmaker somehow?
 Gamepiece w2 = new Gamepiece();
 Gamepiece w3 = new Gamepiece();
@@ -83,5 +91,4 @@ for i = 0 to 6
 not_occupied[0] = w1;
 .
 .
-.
-*/
+.*/

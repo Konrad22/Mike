@@ -6,20 +6,18 @@ public class BoardMarker
 {
 	int x, y, radian;
 	private boolean free = true;
-	Graphics graphics;
 	
-	BoardMarker(int x, int y, int radian, Graphics graphics)
+	BoardMarker(int x, int y, int radian)
 	{
-		this.x = x;
-		this.y = y;
+		this.x = x - radian/2;
+		this.y = y - radian/2;
 		this.radian = radian;
-		this.graphics = graphics;
 	}
 	
-	private void draw()
+	void draw(Graphics graphics)
 	{
 		graphics.setColor(BLACK);
-		graphics.fillOval(x - radian, y - radian, 2*radian, 2*radian);		//is that possible? g would be the frame, I think?
+		graphics.fillOval(x, y, radian, radian);
 	}
 	
 	void occupy()
@@ -27,9 +25,9 @@ public class BoardMarker
 		free = false;
 	}
 	
-	void leave()
+	void leave(Graphics graphics)
 	{
 		free = true;
-		this.draw();
+		this.draw(graphics);
 	}
 }
