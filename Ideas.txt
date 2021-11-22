@@ -1,19 +1,18 @@
-Put gamepieces on every intersection, draw in the background color. Change their color when a gamepiece is 'set down' there, and 'remove' visible pieces by coloring them in background color, redrawing the point of intersection on top of it afterwards.
-
 Both players have 9 starting pieces, put them in a row at the left and the right of the screen. Taken pieces are placed there as well.
 
 Phase 1: everything not occupied is a viable turn.
-after setting down a stone, check if 3 stones of one color are aligned (query the stones in the row and line what color they have), if else, because even if two 3 stones are aligned, only one piece can be removed
+after setting down a stone, check if 3 stones of one color are aligned (query the stones in the row and line what color they have), if else, because even if two 3 stones are
+aligned, only one piece can be removed
 if 3, select any stone on the board of the opposite color to remove (3 pieces aligned in a row or line are safe, query each stone and make a set of viable stones?)
-if, and only if all enemy pieces are 'safe', you can also take safe pieces (basically, if first query yields an empty set, add all enemy stones in the game to the list and choose from those)
+if, and only if all enemy pieces are 'safe', you can also take safe pieces (basically, if first query yields an empty set, add all enemy stones in the game to the list and choose
+from those)
 
-whenever a stone is taken, query if the other player has 3 or less pieces left, including those not yet set on the board
+whenever a stone is taken, query if the other player has 3 or fewer pieces left, including those not yet set on the board
 counter for how many are left outside the board, always added to the number? start query only from phase 2 onwards, if answer is yes twice for one side, game over for that side
 
-dictionary of sets for each intersection/gamepiece to stay up to date where they can move? One big dictionary for all 3 phases, or 3 dictionaries?
-probably 3 dictionaries, so I don't have to maintain it all the time?
-phase 1 and phase 3 only need one entry (a set) each
-keep that set around and update it? viable move for phase 2 = intersection between list of unoccupied places and reachable places for the specific spot
+phase 1 and phase 3 only need one entry (a set) each -> list of unoccupied board markers?
+keep that set around and update it? viable move for phase 2 = intersection between list of unoccupied places and reachable places for the
+specific spot <- board markers needs to be merged into game pieces for this to be viable, or list of reachable
 in that case, no need for attribute 'occupied' in the intersection of lines?
 
 any problem if I use lists instead (which don't need special implementation unlike sets)

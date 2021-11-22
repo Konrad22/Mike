@@ -40,16 +40,16 @@ public class Game
         return boardMarkerList;
     }
 
-    /*List<GamePiece> createTakenGamePieceList()
+    List<GamePiece> createTakenGamePieceList(List<GamePiece> gamePieceList)
     {
         List<GamePiece> takenGamePieceList = new ArrayList<>();
-        for (int i = 0; i < 14; i++)
+        for (int i = 0; i < 7; i++)
         {
-                takenGamePieceList.add(i, );
-                takenGamePieceList.add(i + 7, );
+                takenGamePieceList.add(i, gamePieceList.get(i));
+                takenGamePieceList.add(i + 7, gamePieceList.get(i + 9));
         }
         return takenGamePieceList;
-    }*/
+    }
 
     private List<GamePiece> createGridOfGamePieces(int x, int y, int gap)
     {
@@ -62,14 +62,21 @@ public class Game
         return gamePieceList;
     }
 
-    private List<BoardMarker> createGridOfBoardMarkers(int x, int y, int gap)
-    {
+    private List<BoardMarker> createGridOfBoardMarkers(int x, int y, int gap) {
         List<BoardMarker> boardMarkerList = new ArrayList<>();
-        for (int i = 0; i < 9; i++)
-        {
-            boardMarkerList.add(new BoardMarker(x + (i % 3) * gap, y + (i / 3) * gap, radian/2));
+        for (int i = 0; i < 9; i++) {
+            boardMarkerList.add(new BoardMarker(x + (i % 3) * gap, y + (i / 3) * gap, radian / 2));
         }
         boardMarkerList.remove(4);
         return boardMarkerList;
+    }
+
+    public static void main(String args[]) {
+        //add all the lists to the Game Pieces
+
+        while (true)
+        {
+            //running game + game logic
+        }
     }
 }

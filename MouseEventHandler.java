@@ -4,11 +4,16 @@ import java.awt.event.MouseListener;
 
 public class MouseEventHandler implements MouseListener
 {
+    ClickInterceptor interceptor;
+
+    public MouseEventHandler(ClickInterceptor interceptor) {
+        this.interceptor = interceptor;
+    }
 
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        //needed
+        interceptor.printCoordinates();
     }
 
     @Override

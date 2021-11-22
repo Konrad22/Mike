@@ -18,19 +18,19 @@ public class Player
 		STAGE1, STAGE2, STAGE3;
 	}
 	
-	public void changePhase(Stage stage)
+	public void changeStage(Stage stage)
 	{
 		this.stage = stage;
 	}
 	
 	public Stage checkStage()
 	{
-		return this.stage;
+		return stage;
 	}
 	
 	public int checkNumberOfPieces()
 	{
-		return this.listOfPieces.size();
+		return listOfPieces.size();
 	}
 	
 	public void updateListOfPieces(GamePiece g1, GamePiece g2)

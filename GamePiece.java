@@ -8,15 +8,20 @@ public class GamePiece
 	int x, y, radian;
 	Color color;
 	Player player;
-	GamePiece(int x, int y, int radian)  //r...radian
+	ClickInterceptor clickInterceptor;
+
+	GamePiece(int x, int y, int radian)
 	{
 		this.x = x - radian/2;
 		this.y = y - radian/2;
 		this.radian = radian;
-		color = FrameBuilder.BACKGROUND_COLOR; //ask later
+		color = FrameBuilder.BACKGROUND_COLOR;
+		clickInterceptor = new ClickInterceptor(this.x, this.y, this.radian);
+		MouseEventHandler handler = new MouseEventHandler(clickInterceptor);
+		clickInterceptor.addMouseListener(handler);
 	}
 	
-	GamePiece(int x, int y, int radian, Player player)  //r...radian
+	GamePiece(int x, int y, int radian, Player player)
 	{
 		this.x = x - radian/2;
 		this.y = y - radian/2;
@@ -64,8 +69,6 @@ public class GamePiece
 
 	void addMouseListener(MouseEventHandler mouseEventHandler)
 	{
-
+		//?
 	}
 }
-
-//probably will have to extend something somewhere to include coloring

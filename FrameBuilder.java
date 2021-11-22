@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.List;
 
 import static java.awt.Color.*;
 
@@ -16,8 +17,14 @@ public class FrameBuilder
   {
     Game game = new Game();
     myFrame = new Frame("A simple Frame");
-    //myFrame.setLayout(new FlowLayout());
-    myFrame.add(new GameBoardDrawer(game.createGamePieces(), game.createBoardMarkers()));
+    List<GamePiece> gamePieceList = game.createGamePieces();
+    for (int i = 18; i < gamePieceList.size(); i++) {
+      GamePiece gamePiece = gamePieceList.get(i);
+      myFrame.add(gamePiece.clickInterceptor);
+    }
+
+    /*myFrame.setLayout(new FlowLayout());
+    myFrame.add(new GameBoardDrawer(game.createGamePieces(), game.createBoardMarkers()));*/
     myFrame.setBackground(BACKGROUND_COLOR);
     myFrame.pack();                             // automatic resizing
     myFrame.setVisible(true);
