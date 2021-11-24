@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.awt.Color.*;
@@ -9,6 +10,7 @@ public class Game
     Player Red_Player = new Player(RED);
     Player Blue_Player = new Player(BLUE);
     Player currentPlayer = Red_Player;
+    Player enemyPlayer = Blue_Player;
     int radian = 20;
     public static final Game INSTANCE = new Game();
     Stage stage = Stage.PLACE_PIECE;
@@ -26,6 +28,71 @@ public class Game
         SELECT_OWN_PIECE, PLACE_PIECE, REMOVE_ENEMY_PIECE
     }
 
+    List<GamePiece> listRemovablePieces()
+    {
+            int j = 0;
+            List<GamePiece> xList = new ArrayList<>();
+            List<GamePiece> yList = new ArrayList<>();
+            List<GamePiece> safeList = new ArrayList<>();
+            List<GamePiece> takeList = new ArrayList<>();
+
+            for(int i = 0; i < 24; i++)
+            {
+                if (boardMarkerList.get(i).player == enemyPlayer)
+                {
+                    for (GamePiece gamePiece : boardMarkerList)
+                    {
+
+                        if (boardMarkerList.get(i).player == enemyPlayer)
+                        {
+                            if (gamePiece.x == boardMarkerList.get(i).x)
+                            {
+                                xList.add(gamePiece);
+                            }
+                            if (gamePiece.y == boardMarkerList.get(i).y)
+                            {
+                                yList.add(gamePiece);
+                            }
+                        }
+                    }
+                }
+                if (xList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer) || yList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer))
+                {
+                    safeList.add(boardMarkerList.get(i));
+                }
+                else
+                {
+                    takeList.add(boardMarkerList.get(i));
+                }
+
+                j++;
+
+                if (j == enemyPlayer.numberGamePieces)
+                {
+                    i = 24;
+                }
+            }
+            if(takeList.isEmpty())
+            {
+                takeList = safeList;
+            }
+            return takeList;
+    }
+
+    void takePiece(GamePiece gamePiece)
+    {
+        gamePiece.erase();
+        if(currentPlayer == Red_Player)
+        {
+            initialGamePiecesList.get(9-Game.INSTANCE.currentPlayer.numberGamePieces).draw();
+        }
+        else
+        {
+            initialGamePiecesList.get(18-Game.INSTANCE.currentPlayer.numberGamePieces).draw();
+        }
+        Game.INSTANCE.currentPlayer.numberGamePieces--;
+    }
+
     void endTurn(GamePiece activeGamePiece)
     {
         List<GamePiece> xList = new ArrayList<>();
@@ -41,6 +108,7 @@ public class Game
                 yList.add(gamePiece);
             }
         }
+
         if(xList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer) || yList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer))
         {
             stage = Stage.REMOVE_ENEMY_PIECE;
@@ -51,11 +119,12 @@ public class Game
             if (currentPlayer == Red_Player)
             {
                 currentPlayer = Blue_Player;
+                enemyPlayer = Red_Player;
             }
-
             else
             {
                 currentPlayer = Red_Player;
+                enemyPlayer = Blue_Player;
             }
             if(turnsGoneBy<18)
             {
@@ -65,8 +134,8 @@ public class Game
             {
                 stage = Stage.SELECT_OWN_PIECE;
             }
+            turnsGoneBy++;
         }
-        turnsGoneBy++;
     }
 
     List<GamePiece> createGamePieces()
@@ -144,6 +213,5 @@ public class Game
 
     //public static void main(String args[]) {
         //add all the lists to the Game Pieces
-        //add two players
 
 }
