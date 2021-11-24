@@ -1,6 +1,6 @@
 public class TurnCounter
 {
-	private static boolean isTurnBlack = false;		//I probably still need a constructor for this to call the method, right?
+	private static boolean isTurnRed = false;		//I probably still need a constructor for this to call the method, right?
 	
 	TurnCounter()														//Technically, this would construct a TurnCounter with isTurnBlack == false ?
 	{
@@ -8,11 +8,11 @@ public class TurnCounter
 	
 	public void changeTurn()
  	{
-		isTurnBlack = !isTurnBlack;
+		isTurnRed = !isTurnRed;
 	}
 	
 	public static boolean black()
 	{
-		return isTurnBlack;
+		return isTurnRed;
 	}
 }

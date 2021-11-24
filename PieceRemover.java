@@ -7,22 +7,18 @@ public class PieceRemover
 	GamePiece taken [] = new GamePiece[13];
 
 
-  void takePiece(Graphics graphics, GamePiece gamePiece, Player player)
+  void takePiece(GamePiece gamePiece, Player player)
 	{
-		gamePiece.erase(graphics);
+		gamePiece.erase();
 		if(TurnCounter.black())
 		{
-			graphics.setColor(FrameBuilder.BLUE_PLAYER);
-			taken[counter_red].draw(graphics);
+			taken[counter_red].draw();
 			counter_red++;
 		}
 		else
 		{
-			graphics.setColor(FrameBuilder.RED_PLAYER);
-			taken[counter_blue].draw(graphics);
+			taken[counter_blue].draw();
 			counter_blue++;
 		}
-		player.removePieceFromList(gamePiece);
-
 	}
 }

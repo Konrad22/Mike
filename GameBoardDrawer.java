@@ -7,31 +7,25 @@ public class GameBoardDrawer extends Component
     static int y = 200;
     static int s = 100;
     List<GamePiece> gamePieceList;
-    List<BoardMarker> boardMarkerList;
 
-    public GameBoardDrawer(List<GamePiece> gamePieceList, List<BoardMarker> boardMarkerList)
+    public GameBoardDrawer()
     {
-        this.gamePieceList = gamePieceList;
-        this.boardMarkerList = boardMarkerList;
+        this.setBounds(0, 0, 1000, 1000);
     }
 
     @Override
     public void paint(Graphics graphics)
     {
         drawGameBoard(graphics);
-        for (GamePiece gamePiece : gamePieceList) {
+        /*for (GamePiece gamePiece : gamePieceList) {
             graphics.setColor(gamePiece.color);
             gamePiece.draw(graphics);
-        }
-
-        for (BoardMarker boardMarker : boardMarkerList) {
-            boardMarker.draw(graphics);
-        }
+        }*/
     }
 
     void drawGameBoard(Graphics graphics)
     {
-        graphics.setColor(FrameBuilder.LINE_COLOR);
+        graphics.setColor(Game.LINE_COLOR);
         graphics.drawRect(x, y, 6 * s, 6 * s);
         graphics.drawRect(x + s, y + s, 4 * s, 4 * s);
         graphics.drawRect(x + 2 * s, y + 2 * s, 2 * s, 2 * s);

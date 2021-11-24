@@ -1,43 +1,102 @@
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.awt.Color.*;
+
 public class Game
 {
-    Player Red_Player = new Player(FrameBuilder.RED_PLAYER);
-    Player Blue_Player = new Player(FrameBuilder.BLUE_PLAYER);
+    Player Red_Player = new Player(RED);
+    Player Blue_Player = new Player(BLUE);
+    Player currentPlayer = Red_Player;
     int radian = 20;
+    public static final Game INSTANCE = new Game();
+    Stage stage = Stage.PLACE_PIECE;
+    private List<GamePiece> boardMarkerList;
+    private List<GamePiece> initialGamePiecesList;
+    int turnsGoneBy = 0;
+
+    private Game()
+    {
+
+    }
+
+    enum Stage
+    {
+        SELECT_OWN_PIECE, PLACE_PIECE, REMOVE_ENEMY_PIECE
+    }
+
+    void endTurn(GamePiece activeGamePiece)
+    {
+        List<GamePiece> xList = new ArrayList<>();
+        List<GamePiece> yList = new ArrayList<>();
+        for(GamePiece gamePiece: boardMarkerList)
+        {
+            if(gamePiece.x == activeGamePiece.x)
+            {
+                xList.add(gamePiece);
+            }
+            if(gamePiece.y == activeGamePiece.y)
+            {
+                yList.add(gamePiece);
+            }
+        }
+        if(xList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer) || yList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer))
+        {
+            stage = Stage.REMOVE_ENEMY_PIECE;
+        }
+
+        else
+        {
+            if (currentPlayer == Red_Player)
+            {
+                currentPlayer = Blue_Player;
+            }
+
+            else
+            {
+                currentPlayer = Red_Player;
+            }
+            if(turnsGoneBy<18)
+            {
+                stage = Stage.PLACE_PIECE;
+            }
+            else
+            {
+                stage = Stage.SELECT_OWN_PIECE;
+            }
+        }
+        turnsGoneBy++;
+    }
+
     List<GamePiece> createGamePieces()
     {
         List<GamePiece> gamePieceList = new ArrayList<>();
+        List<GamePiece> initialGamePiecesList = new ArrayList<>();
+        List<GamePiece> boardMarkerList = new ArrayList<>();
         for(int i = 0; i < 21; i++)
         {
             if(i>17)
             {
-                gamePieceList.addAll(createGridOfGamePieces(GameBoardDrawer.x + GameBoardDrawer.s*(20-i), GameBoardDrawer.x + GameBoardDrawer.s*(20-i), GameBoardDrawer.s*(i-17)));          //figure out the real numbers in dependency of i
+                boardMarkerList.addAll(createGridOfGamePieces(GameBoardDrawer.x + GameBoardDrawer.s*(20-i), GameBoardDrawer.x + GameBoardDrawer.s*(20-i), GameBoardDrawer.s*(i-17)));
             }
             else if (i > 8)
             {
-                GamePiece gamePiece = new GamePiece(GameBoardDrawer.x + i*40, 20, radian, Blue_Player);               //figure out the numbers in dependency of i
-                gamePieceList.add(gamePiece);
+                GamePiece gamePiece = new GamePiece(GameBoardDrawer.x + i*40, 80, radian, Blue_Player);               //figure out the numbers in dependency of i
+                initialGamePiecesList.add(gamePiece);
             }
             else
             {
                 GamePiece gamePiece = new GamePiece(GameBoardDrawer.x + i*40, 900, radian, Red_Player);             //figure out the numbers in dependency of i
-                gamePieceList.add(gamePiece);
+                initialGamePiecesList.add(gamePiece);
             }
 
         }
+        gamePieceList.addAll(initialGamePiecesList);
+        gamePieceList.addAll(boardMarkerList);
+        this.boardMarkerList = boardMarkerList;
+        this.initialGamePiecesList = initialGamePiecesList;
         return gamePieceList;
-    }
-
-    List<BoardMarker> createBoardMarkers()
-    {
-        List<BoardMarker> boardMarkerList = new ArrayList<>();
-        for(int i = 0; i < 3; i++)
-        {
-            boardMarkerList.addAll(createGridOfBoardMarkers(GameBoardDrawer.x + GameBoardDrawer.s*(2-i), GameBoardDrawer.x + GameBoardDrawer.s*(2-i), GameBoardDrawer.s*(i+1)));
-        }
-        return boardMarkerList;
     }
 
     List<GamePiece> createTakenGamePieceList(List<GamePiece> gamePieceList)
@@ -62,21 +121,29 @@ public class Game
         return gamePieceList;
     }
 
-    private List<BoardMarker> createGridOfBoardMarkers(int x, int y, int gap) {
-        List<BoardMarker> boardMarkerList = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
-            boardMarkerList.add(new BoardMarker(x + (i % 3) * gap, y + (i / 3) * gap, radian / 2));
+    static Frame myFrame;
+    final static Color BACKGROUND_COLOR = LIGHT_GRAY;
+    final static Color LINE_COLOR = BLACK;
+
+
+    public static void main(String args[])
+    {
+        myFrame = new Frame("A simple Frame");
+        myFrame.setBounds(100, 10, 1000, 1000);
+        myFrame.setLayout(null);
+        myFrame.add(new GameBoardDrawer());
+        List<GamePiece> gamePieceList = Game.INSTANCE.createGamePieces();
+        for (int i = 0; i < gamePieceList.size(); i++) {
+            GamePiece gamePiece = gamePieceList.get(i);
+            myFrame.add(gamePiece);
         }
-        boardMarkerList.remove(4);
-        return boardMarkerList;
+        myFrame.setBackground(BACKGROUND_COLOR);
+        //myFrame.pack();                             // automatic resizing
+        myFrame.setVisible(true);
     }
 
-    public static void main(String args[]) {
+    //public static void main(String args[]) {
         //add all the lists to the Game Pieces
+        //add two players
 
-        while (true)
-        {
-            //running game + game logic
-        }
-    }
 }

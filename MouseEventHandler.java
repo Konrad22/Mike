@@ -1,19 +1,19 @@
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class MouseEventHandler implements MouseListener
 {
-    ClickInterceptor interceptor;
+    GamePiece gamePiece;
 
-    public MouseEventHandler(ClickInterceptor interceptor) {
-        this.interceptor = interceptor;
+    public MouseEventHandler(GamePiece gamePiece) {
+        this.gamePiece = gamePiece;
     }
 
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        interceptor.printCoordinates();
+        gamePiece.printCoordinates();
+        gamePiece.handleMouseClicks();
     }
 
     @Override
