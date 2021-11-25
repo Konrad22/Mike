@@ -38,31 +38,57 @@ public class GamePiece extends Component
 
 	void handleMouseClicks()
 	{
-		if(player == null && Game.INSTANCE.stage == Game.Stage.PLACE_PIECE)
-		{
-			changeColor();
-			draw();
-			player = Game.INSTANCE.currentPlayer;
+		if(Game.INSTANCE.stage != Game.Stage.GAME_OVER) {
+			if (player == null && Game.INSTANCE.stage == Game.Stage.PLACE_PIECE) {
+				if (Game.INSTANCE.turnsGoneBy < 18 || Game.INSTANCE.selected != null && this.listOfPiecesInReach.contains(Game.INSTANCE.selected)) {
+					changeColor(Game.INSTANCE.currentPlayer.color);
+					draw();
+					player = Game.INSTANCE.currentPlayer;
+					Game.INSTANCE.endTurn(this);
+				}
+			}
+			if (player != null && player != Game.INSTANCE.currentPlayer && Game.INSTANCE.stage == Game.Stage.REMOVE_ENEMY_PIECE && Game.INSTANCE.listRemovablePieces().contains(this)) {
+				color = Game.BACKGROUND_COLOR;
+				draw();
+				color = Game.LINE_COLOR;
+				redraw();
+				player = null;
+				Game.INSTANCE.endTurn(this);
+			}
+
+			if (player == Game.INSTANCE.currentPlayer && Game.INSTANCE.stage == Game.Stage.SELECT_OWN_PIECE) {
+				if (listOfPiecesInReach.stream().anyMatch(gamePiece -> gamePiece.player == null)) {
+					color = Game.BACKGROUND_COLOR;
+					draw();
+					color = Game.LINE_COLOR;
+					redraw();
+					player = null;
+					Game.INSTANCE.endTurn(this);
+				}
+			}
 		}
-		if(player != null && player != Game.INSTANCE.currentPlayer && Game.INSTANCE.stage == Game.Stage.REMOVE_ENEMY_PIECE)
-		{
-			color = Game.BACKGROUND_COLOR;
-			draw();
-			player = null;
-		}
-		Game.INSTANCE.endTurn(this);
+	}
+
+	void redraw()
+	{
+		drawAt(radian/4, radian/2);
 	}
 
 	void draw()
 	{
-		Graphics graphics = getGraphics();
-		graphics.setColor(color);
-		graphics.fillOval(0, 0, radian, radian);
+		drawAt(0, radian);
 	}
 
-	void changeColor()
+	void drawAt(int at, int radian)
 	{
-		color = Game.INSTANCE.currentPlayer.color;
+		Graphics graphics = getGraphics();
+		graphics.setColor(color);
+		graphics.fillOval(at, at, radian, radian);
+	}
+
+	void changeColor(Color color)
+	{
+		this.color = color;
 	}
 	
 	void erase()
@@ -92,23 +118,5 @@ public class GamePiece extends Component
 	public void printCoordinates()
 	{
 		System.out.println("x, y: " + x + ", " + y);
-	}
-
-	void moveTo(GamePiece gamePiece, Graphics graphics)
-	{
-		gamePiece.color = color;
-		erase();
-		gamePiece.draw();
-	}
-
-	void selectGamePiece(Graphics graphics)
-	{
-		graphics.setColor(Game.LINE_COLOR);
-		graphics.drawOval(x, y, radian, radian);
-	}
-
-	void deselectGamePiece(Graphics graphics)
-	{
-		draw();
 	}
 }

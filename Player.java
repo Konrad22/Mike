@@ -1,15 +1,16 @@
 import java.awt.*;
-import java.util.List;
 
 public class Player
 {
 	Color color;
-	int numberGamePieces;
-	
-	Player(Color color)
+	int score;
+	String name;
+
+	Player(String name, Color color)
 	{
 		this.color = color;
-		numberGamePieces = 9;
+		this.name = name;
+		score = 0;
 	}
 
 }

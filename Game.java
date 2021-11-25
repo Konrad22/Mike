@@ -1,14 +1,14 @@
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.awt.Color.*;
 
-public class Game
-{
-    Player Red_Player = new Player(RED);
-    Player Blue_Player = new Player(BLUE);
+public class Game {
+    private static GameBoardDrawer gameBoardDrawer;
+    Player Red_Player = new Player("Red", RED);
+    Player Blue_Player = new Player("Blue",BLUE);
     Player currentPlayer = Red_Player;
     Player enemyPlayer = Blue_Player;
     int radian = 20;
@@ -17,86 +17,50 @@ public class Game
     private List<GamePiece> boardMarkerList;
     private List<GamePiece> initialGamePiecesList;
     int turnsGoneBy = 0;
+    GamePiece selected;
 
-    private Game()
-    {
+    private Game() {
 
     }
 
-    enum Stage
-    {
-        SELECT_OWN_PIECE, PLACE_PIECE, REMOVE_ENEMY_PIECE
+    enum Stage {
+        SELECT_OWN_PIECE, PLACE_PIECE, REMOVE_ENEMY_PIECE, GAME_OVER
     }
 
-    List<GamePiece> listRemovablePieces()
-    {
-            int j = 0;
-            List<GamePiece> xList = new ArrayList<>();
-            List<GamePiece> yList = new ArrayList<>();
-            List<GamePiece> safeList = new ArrayList<>();
-            List<GamePiece> takeList = new ArrayList<>();
+    List<GamePiece> listRemovablePieces() {
+        int j = 0;
+        List<GamePiece> safeList = new ArrayList<>();
+        List<GamePiece> takeList = new ArrayList<>();
 
-            for(int i = 0; i < 24; i++)
-            {
-                if (boardMarkerList.get(i).player == enemyPlayer)
-                {
-                    for (GamePiece gamePiece : boardMarkerList)
-                    {
+        for (int i = 0; i < 24; i++) {
+            if (boardMarkerList.get(i).player == enemyPlayer) {
 
-                        if (boardMarkerList.get(i).player == enemyPlayer)
-                        {
-                            if (gamePiece.x == boardMarkerList.get(i).x)
-                            {
-                                xList.add(gamePiece);
-                            }
-                            if (gamePiece.y == boardMarkerList.get(i).y)
-                            {
-                                yList.add(gamePiece);
-                            }
-                        }
-                    }
-                }
-                if (xList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer) || yList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer))
-                {
+                if (checkForThree(boardMarkerList.get(i))) {
                     safeList.add(boardMarkerList.get(i));
-                }
-                else
-                {
+                } else {
                     takeList.add(boardMarkerList.get(i));
                 }
 
                 j++;
 
-                if (j == enemyPlayer.numberGamePieces)
-                {
+                if (j == enemyPlayer.score) {
                     i = 24;
                 }
             }
-            if(takeList.isEmpty())
-            {
-                takeList = safeList;
-            }
-            return takeList;
+        }
+        if (takeList.isEmpty()) {
+            takeList = safeList;
+        }
+        return takeList;
     }
 
-    void takePiece(GamePiece gamePiece)
-    {
-        gamePiece.erase();
-        if(currentPlayer == Red_Player)
-        {
-            initialGamePiecesList.get(9-Game.INSTANCE.currentPlayer.numberGamePieces).draw();
-        }
-        else
-        {
-            initialGamePiecesList.get(18-Game.INSTANCE.currentPlayer.numberGamePieces).draw();
-        }
-        Game.INSTANCE.currentPlayer.numberGamePieces--;
-    }
-
-    void endTurn(GamePiece activeGamePiece)
+    boolean checkForThree(GamePiece activeGamePiece)
     {
         List<GamePiece> xList = new ArrayList<>();
         List<GamePiece> yList = new ArrayList<>();
+        boolean xMatch;
+        boolean yMatch;
+
         for(GamePiece gamePiece: boardMarkerList)
         {
             if(gamePiece.x == activeGamePiece.x)
@@ -108,14 +72,70 @@ public class Game
                 yList.add(gamePiece);
             }
         }
-
-        if(xList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer) || yList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer))
+        if(xList.size() == 6)
         {
+            xList.sort(Comparator.comparingInt(g -> g.y));
+            if(xList.subList(0,3).contains(activeGamePiece))
+            {
+                xMatch = xList.subList(0,3).stream().allMatch(gamePiece -> gamePiece.player == currentPlayer);
+            }
+            else
+            {
+                xMatch = xList.subList(3,6).stream().allMatch(gamePiece -> gamePiece.player == currentPlayer);
+            }
+        }
+        else
+        {
+            xMatch = xList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer);
+        }
+
+        if(yList.size() == 6)
+        {
+            yList.sort(Comparator.comparingInt(g -> g.x));
+            if(yList.subList(0,3).contains(activeGamePiece))
+            {
+                yMatch = yList.subList(0,3).stream().allMatch(gamePiece -> gamePiece.player == currentPlayer);
+            }
+            else
+            {
+                yMatch = yList.subList(3,6).stream().allMatch(gamePiece -> gamePiece.player == currentPlayer);
+            }
+        }
+        else
+        {
+            yMatch = yList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer);
+        }
+        return xMatch || yMatch;
+    }
+
+    void endTurn(GamePiece activeGamePiece)
+    {
+        if(checkForThree(activeGamePiece) && stage == Stage.PLACE_PIECE)
+        {
+            Game.INSTANCE.listRemovablePieces();
             stage = Stage.REMOVE_ENEMY_PIECE;
+        }
+
+        else if(stage == Stage.SELECT_OWN_PIECE)
+        {
+            selected = activeGamePiece;
+            stage = Stage.PLACE_PIECE;
         }
 
         else
         {
+            if(stage == Stage.REMOVE_ENEMY_PIECE)
+            {
+                initialGamePiecesList.get(turnsGoneBy%2 * 9 + currentPlayer.score).changeColor(enemyPlayer.color);
+                initialGamePiecesList.get(turnsGoneBy%2 * 9 + currentPlayer.score).draw();
+                currentPlayer.score++;
+                if(currentPlayer.score > 6)
+                {
+                    stage = Stage.GAME_OVER;
+                    gameBoardDrawer.announceWinner();
+                    return;
+                }
+            }
             if (currentPlayer == Red_Player)
             {
                 currentPlayer = Blue_Player;
@@ -128,6 +148,7 @@ public class Game
             }
             if(turnsGoneBy<18)
             {
+                initialGamePiecesList.get(turnsGoneBy%2*9 + turnsGoneBy/2).erase();
                 stage = Stage.PLACE_PIECE;
             }
             else
@@ -168,17 +189,6 @@ public class Game
         return gamePieceList;
     }
 
-    List<GamePiece> createTakenGamePieceList(List<GamePiece> gamePieceList)
-    {
-        List<GamePiece> takenGamePieceList = new ArrayList<>();
-        for (int i = 0; i < 7; i++)
-        {
-                takenGamePieceList.add(i, gamePieceList.get(i));
-                takenGamePieceList.add(i + 7, gamePieceList.get(i + 9));
-        }
-        return takenGamePieceList;
-    }
-
     private List<GamePiece> createGridOfGamePieces(int x, int y, int gap)
     {
         List<GamePiece> gamePieceList = new ArrayList<>();
@@ -195,23 +205,19 @@ public class Game
     final static Color LINE_COLOR = BLACK;
 
 
-    public static void main(String args[])
+    public static void main(String[] args)
     {
         myFrame = new Frame("A simple Frame");
         myFrame.setBounds(100, 10, 1000, 1000);
         myFrame.setLayout(null);
-        myFrame.add(new GameBoardDrawer());
+        gameBoardDrawer = new GameBoardDrawer();
+        myFrame.add(gameBoardDrawer);
         List<GamePiece> gamePieceList = Game.INSTANCE.createGamePieces();
-        for (int i = 0; i < gamePieceList.size(); i++) {
-            GamePiece gamePiece = gamePieceList.get(i);
+        for (GamePiece gamePiece : gamePieceList) {
             myFrame.add(gamePiece);
         }
         myFrame.setBackground(BACKGROUND_COLOR);
         //myFrame.pack();                             // automatic resizing
         myFrame.setVisible(true);
     }
-
-    //public static void main(String args[]) {
-        //add all the lists to the Game Pieces
-
 }
