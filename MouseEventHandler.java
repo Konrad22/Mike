@@ -12,7 +12,7 @@ public class MouseEventHandler implements MouseListener
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        gamePiece.printCoordinates();
+        //gamePiece.printCoordinates();
         gamePiece.handleMouseClicks();
     }
 

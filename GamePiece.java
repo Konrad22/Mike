@@ -1,10 +1,11 @@
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
 public class GamePiece extends Component
 {
-	private List<GamePiece> listOfPiecesInReach;
+	private List<GamePiece> listOfPiecesInReach = new ArrayList<>();
 	int x, y, radian;
 	Color color;
 	Player player;
@@ -31,42 +32,73 @@ public class GamePiece extends Component
 		this.setBounds(this.x, this.y, this.radian, this.radian);
 	}
 
-	void addNeighbours(List<GamePiece> listOfPiecesInReach)
+	void addNeighbours(GamePiece g1)
 	{
-		this.listOfPiecesInReach = listOfPiecesInReach;
+		this.listOfPiecesInReach.add(g1);
+	}
+
+	void addNeighbours(GamePiece g1, GamePiece g2)
+	{
+		this.listOfPiecesInReach.add(g1);
+		this.listOfPiecesInReach.add(g2);
 	}
 
 	void handleMouseClicks()
 	{
 		if(Game.INSTANCE.stage != Game.Stage.GAME_OVER) {
 			if (player == null && Game.INSTANCE.stage == Game.Stage.PLACE_PIECE) {
-				if (Game.INSTANCE.turnsGoneBy < 18 || Game.INSTANCE.selected != null && this.listOfPiecesInReach.contains(Game.INSTANCE.selected)) {
-					changeColor(Game.INSTANCE.currentPlayer.color);
-					draw();
-					player = Game.INSTANCE.currentPlayer;
+				if (Game.INSTANCE.turnsGoneBy < 18) {
+					drawGamePiece();
+					Game.INSTANCE.endTurn(this);
+				}
+				else if(Game.INSTANCE.selected != null && this.listOfPiecesInReach.contains(Game.INSTANCE.selected) || Game.INSTANCE.selected != null && Game.INSTANCE.enemyPlayer.score == 6)
+				{
+					Game.INSTANCE.selected.unDrawGamePiece();
+					drawGamePiece();
 					Game.INSTANCE.endTurn(this);
 				}
 			}
-			if (player != null && player != Game.INSTANCE.currentPlayer && Game.INSTANCE.stage == Game.Stage.REMOVE_ENEMY_PIECE && Game.INSTANCE.listRemovablePieces().contains(this)) {
-				color = Game.BACKGROUND_COLOR;
-				draw();
-				color = Game.LINE_COLOR;
-				redraw();
-				player = null;
+			if (Game.INSTANCE.stage == Game.Stage.REMOVE_ENEMY_PIECE && Game.INSTANCE.listRemovablePieces().contains(this)) {
+				unDrawGamePiece();
 				Game.INSTANCE.endTurn(this);
 			}
 
 			if (player == Game.INSTANCE.currentPlayer && Game.INSTANCE.stage == Game.Stage.SELECT_OWN_PIECE) {
-				if (listOfPiecesInReach.stream().anyMatch(gamePiece -> gamePiece.player == null)) {
-					color = Game.BACKGROUND_COLOR;
-					draw();
-					color = Game.LINE_COLOR;
-					redraw();
-					player = null;
+				if(Game.INSTANCE.enemyPlayer.score == 6)
+				{
+					selectPiece();
+					Game.INSTANCE.endTurn(this);
+				}
+				else if(listOfPiecesInReach.stream().allMatch(gamePiece -> gamePiece.player != null))
+				{
+					Game.INSTANCE.stage = Game.Stage.GAME_OVER;
+					Game.gameBoardDrawer.announceWinner(Game.INSTANCE.enemyPlayer.name);
+				}
+				else if (listOfPiecesInReach.stream().anyMatch(gamePiece -> gamePiece.player == null)) {
+					selectPiece();
 					Game.INSTANCE.endTurn(this);
 				}
 			}
 		}
+	}
+
+	private void drawGamePiece() {
+		changeColor(Game.INSTANCE.currentPlayer.color);
+		draw();
+		player = Game.INSTANCE.currentPlayer;
+	}
+
+	private void unDrawGamePiece() {
+		color = Game.BACKGROUND_COLOR;
+		draw();
+		color = Game.LINE_COLOR;
+		redraw();
+		player = null;
+	}
+
+	private void selectPiece() {
+		color = Game.LINE_COLOR;
+		getGraphics().fillOval(0, 0, radian, radian);
 	}
 
 	void redraw()
@@ -115,8 +147,8 @@ public class GamePiece extends Component
 
 	}
 
-	public void printCoordinates()
+	/*public void printCoordinates()
 	{
 		System.out.println("x, y: " + x + ", " + y);
-	}
+	}*/
 }

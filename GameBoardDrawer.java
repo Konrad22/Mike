@@ -29,10 +29,10 @@ public class GameBoardDrawer extends Component
         graphics.drawLine(x + 4 * s, y + 3 * s, x + 6 * s, y + 3 * s);
     }
 
-    void announceWinner()
+    void announceWinner(String nameOfWinner)
     {
         Graphics graphics = getGraphics();
         graphics.setFont(font);
-        graphics.drawString(Game.INSTANCE.currentPlayer.name + " wins", 20, 80);
+        graphics.drawString(nameOfWinner + " wins", 20, 80);
     }
 }

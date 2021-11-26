@@ -6,7 +6,7 @@ import java.util.List;
 import static java.awt.Color.*;
 
 public class Game {
-    private static GameBoardDrawer gameBoardDrawer;
+    static GameBoardDrawer gameBoardDrawer;
     Player Red_Player = new Player("Red", RED);
     Player Blue_Player = new Player("Blue",BLUE);
     Player currentPlayer = Red_Player;
@@ -18,6 +18,9 @@ public class Game {
     private List<GamePiece> initialGamePiecesList;
     int turnsGoneBy = 0;
     GamePiece selected;
+    static Frame myFrame;
+    final static Color BACKGROUND_COLOR = LIGHT_GRAY;
+    final static Color LINE_COLOR = BLACK;
 
     private Game() {
 
@@ -28,20 +31,21 @@ public class Game {
     }
 
     List<GamePiece> listRemovablePieces() {
-        int j = 0;
+        int j = 9;
         List<GamePiece> safeList = new ArrayList<>();
         List<GamePiece> takeList = new ArrayList<>();
 
         for (int i = 0; i < 24; i++) {
             if (boardMarkerList.get(i).player == enemyPlayer) {
 
-                if (checkForThree(boardMarkerList.get(i))) {
+                if (checkForThree(boardMarkerList.get(i), enemyPlayer)) {
                     safeList.add(boardMarkerList.get(i));
                 } else {
                     takeList.add(boardMarkerList.get(i));
                 }
 
-                j++;
+
+                j--;
 
                 if (j == enemyPlayer.score) {
                     i = 24;
@@ -54,7 +58,7 @@ public class Game {
         return takeList;
     }
 
-    boolean checkForThree(GamePiece activeGamePiece)
+    boolean checkForThree(GamePiece activeGamePiece, Player player)
     {
         List<GamePiece> xList = new ArrayList<>();
         List<GamePiece> yList = new ArrayList<>();
@@ -77,16 +81,16 @@ public class Game {
             xList.sort(Comparator.comparingInt(g -> g.y));
             if(xList.subList(0,3).contains(activeGamePiece))
             {
-                xMatch = xList.subList(0,3).stream().allMatch(gamePiece -> gamePiece.player == currentPlayer);
+                xMatch = xList.subList(0,3).stream().allMatch(gamePiece -> gamePiece.player == player);
             }
             else
             {
-                xMatch = xList.subList(3,6).stream().allMatch(gamePiece -> gamePiece.player == currentPlayer);
+                xMatch = xList.subList(3,6).stream().allMatch(gamePiece -> gamePiece.player == player);
             }
         }
         else
         {
-            xMatch = xList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer);
+            xMatch = xList.stream().allMatch(gamePiece -> gamePiece.player == player);
         }
 
         if(yList.size() == 6)
@@ -94,23 +98,23 @@ public class Game {
             yList.sort(Comparator.comparingInt(g -> g.x));
             if(yList.subList(0,3).contains(activeGamePiece))
             {
-                yMatch = yList.subList(0,3).stream().allMatch(gamePiece -> gamePiece.player == currentPlayer);
+                yMatch = yList.subList(0,3).stream().allMatch(gamePiece -> gamePiece.player == player);
             }
             else
             {
-                yMatch = yList.subList(3,6).stream().allMatch(gamePiece -> gamePiece.player == currentPlayer);
+                yMatch = yList.subList(3,6).stream().allMatch(gamePiece -> gamePiece.player == player);
             }
         }
         else
         {
-            yMatch = yList.stream().allMatch(gamePiece -> gamePiece.player == currentPlayer);
+            yMatch = yList.stream().allMatch(gamePiece -> gamePiece.player == player);
         }
         return xMatch || yMatch;
     }
 
     void endTurn(GamePiece activeGamePiece)
     {
-        if(checkForThree(activeGamePiece) && stage == Stage.PLACE_PIECE)
+        if(checkForThree(activeGamePiece, currentPlayer) && stage == Stage.PLACE_PIECE)
         {
             Game.INSTANCE.listRemovablePieces();
             stage = Stage.REMOVE_ENEMY_PIECE;
@@ -132,7 +136,7 @@ public class Game {
                 if(currentPlayer.score > 6)
                 {
                     stage = Stage.GAME_OVER;
-                    gameBoardDrawer.announceWinner();
+                    gameBoardDrawer.announceWinner(Game.INSTANCE.currentPlayer.name);
                     return;
                 }
             }
@@ -148,8 +152,12 @@ public class Game {
             }
             if(turnsGoneBy<18)
             {
-                initialGamePiecesList.get(turnsGoneBy%2*9 + turnsGoneBy/2).erase();
+                initialGamePiecesList.get(turnsGoneBy % 2 * 9 + turnsGoneBy / 2).erase();
                 stage = Stage.PLACE_PIECE;
+                if(turnsGoneBy == 17)
+                {
+                    stage = Stage.SELECT_OWN_PIECE;
+                }
             }
             else
             {
@@ -168,7 +176,7 @@ public class Game {
         {
             if(i>17)
             {
-                boardMarkerList.addAll(createGridOfGamePieces(GameBoardDrawer.x + GameBoardDrawer.s*(20-i), GameBoardDrawer.x + GameBoardDrawer.s*(20-i), GameBoardDrawer.s*(i-17)));
+                boardMarkerList.addAll(createGridOfGamePieces(GameBoardDrawer.x + GameBoardDrawer.s*(20-i), GameBoardDrawer.y + GameBoardDrawer.s*(20-i), GameBoardDrawer.s*(i-17)));
             }
             else if (i > 8)
             {
@@ -200,10 +208,12 @@ public class Game {
         return gamePieceList;
     }
 
-    static Frame myFrame;
-    final static Color BACKGROUND_COLOR = LIGHT_GRAY;
-    final static Color LINE_COLOR = BLACK;
-
+    private static void prettifying(int i, int j) {
+        Game.INSTANCE.boardMarkerList.get(1 + i*8).addNeighbours(Game.INSTANCE.boardMarkerList.get(9 + j*8));
+        Game.INSTANCE.boardMarkerList.get(3 + i*8).addNeighbours(Game.INSTANCE.boardMarkerList.get(11 + j*8));
+        Game.INSTANCE.boardMarkerList.get(4 + i*8).addNeighbours(Game.INSTANCE.boardMarkerList.get(12 + j*8));
+        Game.INSTANCE.boardMarkerList.get(6 + i*8).addNeighbours(Game.INSTANCE.boardMarkerList.get(14 + j*8));
+    }
 
     public static void main(String[] args)
     {
@@ -217,7 +227,32 @@ public class Game {
             myFrame.add(gamePiece);
         }
         myFrame.setBackground(BACKGROUND_COLOR);
-        //myFrame.pack();                             // automatic resizing
         myFrame.setVisible(true);
+        //ugly, but this should work
+        for(int i = 0; i < 3; i++)
+        {
+            if(i == 1)
+            {
+                prettifying(i,-1);
+            }
+
+            Game.INSTANCE.boardMarkerList.get(i*8).addNeighbours(Game.INSTANCE.boardMarkerList.get(1 + i*8), Game.INSTANCE.boardMarkerList.get(3 + i*8));
+            Game.INSTANCE.boardMarkerList.get(1 + i*8).addNeighbours(Game.INSTANCE.boardMarkerList.get(i*8), Game.INSTANCE.boardMarkerList.get(2 + i*8));
+            Game.INSTANCE.boardMarkerList.get(2 + i*8).addNeighbours(Game.INSTANCE.boardMarkerList.get(1 + i*8), Game.INSTANCE.boardMarkerList.get(4 + i*8));
+            Game.INSTANCE.boardMarkerList.get(3 + i*8).addNeighbours(Game.INSTANCE.boardMarkerList.get(i*8), Game.INSTANCE.boardMarkerList.get(5 + i*8));
+            Game.INSTANCE.boardMarkerList.get(4 + i*8).addNeighbours(Game.INSTANCE.boardMarkerList.get(2+ i*8), Game.INSTANCE.boardMarkerList.get(7 + i*8));
+            Game.INSTANCE.boardMarkerList.get(5 + i*8).addNeighbours(Game.INSTANCE.boardMarkerList.get(3 + i*8), Game.INSTANCE.boardMarkerList.get(6 + i*8));
+            Game.INSTANCE.boardMarkerList.get(6 + i*8).addNeighbours(Game.INSTANCE.boardMarkerList.get(5 + i*8), Game.INSTANCE.boardMarkerList.get(7 + i*8));
+            Game.INSTANCE.boardMarkerList.get(7 + i*8).addNeighbours(Game.INSTANCE.boardMarkerList.get(4 + i*8), Game.INSTANCE.boardMarkerList.get(6 + i*8));
+
+            if(i != 2)
+            {
+                prettifying(i, i);
+            }
+            else
+            {
+                prettifying(i,0);
+            }
+        }
     }
 }
